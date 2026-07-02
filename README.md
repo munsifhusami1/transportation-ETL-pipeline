@@ -5,7 +5,7 @@
 
 State and regional transportation agencies manage hundreds of active grants across multiple funding programs at the federal level. Tracking each project's award status, expenditure, and compliance with manual data entry across Excel and SQL Server creates reporting delays and data integrity risks. 
 
-This project automates that process, ingesting raw grants data and applying a repeatable cleaning and transformation pipeline. The result is a series of analysis-ready outputs for program reporting and decision-making.
+This project automates that process, ingesting raw grants data and applying a repeatable cleaning and transformation pipeline. The result is a series of analysis-ready outputs for program reporting and decision-making, reducing manual reporting time and eliminating a class of data integrity errors common in multi-source grant tracking.
 
 Note: Source data has been anonymized for public sharing, award amounts scaled by a random factor, project titles replaced with placeholders.
 
@@ -39,11 +39,11 @@ Requires pandas. Place a CSV in the same format in the working directory, update
 
 **Timeline — Late May/Early June 2026**
 
-The following queries were executed against the federal grants tracking database at NJTPA, supporting grant monitoring and reporting across a 13-county region in northern New Jersey. Queries preceded the Python automation pipeline and were run in SQL Server Management Studio for report generation. Data has been anonymized as described above.
+The following queries were executed against the federal grants tracking database at a DOT-state style grants tracking system, supporting grant monitoring and reporting across a multi-county region. Queries preceded the Python automation pipeline and were run in SQL Server Management Studio for report generation. Data has been anonymized as described above.
 
-## Featured query — Union County grant risk flagging
+## Featured query — County grant risk flagging
 
-Identifies awarded grants in Union County that remain unprogrammed and unobligated, surfacing at-risk projects before federal spending deadlines. CASE statements convert binary flags into human-readable status fields for distribution to non-technical stakeholders.
+Identifies awarded grants in a chosen County that remain unprogrammed and unobligated, surfacing at-risk projects before federal spending deadlines. CASE statements convert binary flags into human-readable status fields for distribution to non-technical stakeholders.
 
 ```
 SELECT 
@@ -66,13 +66,19 @@ SELECT
       ,[Municipality]
       ,[Recipient]
 FROM dbo.[Grants Tracker]
-WHERE County_ies = 'Union'
+WHERE County_ies = 'XYZ'
 AND [Programmed] != 1
 AND [Obligated] != 1
 ORDER BY [Awarded_FY] ASC
 ```
 Additional queries supported FY 2022-2023 cycle reporting and subrecipient compliance monitoring for locally sponsored projects, filtering by obligation status and recipient type respectively.
 
-## Context
+## Outputs
 
-Query outputs were published via Power BI Report Builder for distribution to project managers, county liaisons, and executive staff. The Python pipeline documented above automates and extends this process for public use.
+During active grant monitoring at a state DOT-style grants tracking system, the manual process supported the following reporting use cases across its subregions:
+
+1. Identification of at-risk grants approaching federal obligation deadlines
+2. Subrecipient compliance tracking for locally sponsored projects
+3. Cycle-specific reporting for FY 2022-2023 federal grant awards
+
+Reports were distributed to project managers, county liaisons, and executive staff via Power BI Report Builder. This ETL pipeline recreates and automates that manual workflow, reducing consolidation time across three source systems and eliminating the formatting inconsistencies that previously required manual correction before each reporting cycle. 
