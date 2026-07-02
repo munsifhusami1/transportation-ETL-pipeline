@@ -39,11 +39,11 @@ Requires pandas. Place a CSV in the same format in the working directory, update
 
 **Timeline — Late May/Early June 2026**
 
-The following queries were executed against the federal grants tracking database at NJTPA, supporting grant monitoring and reporting across a 13-county region in northern New Jersey. Queries preceded the Python automation pipeline and were run in SQL Server Management Studio for report generation. Data has been anonymized as described above.
+The following queries were executed against the federal grants tracking database at a DOT-state style grants tracking system, supporting grant monitoring and reporting across a multi-county region. Queries preceded the Python automation pipeline and were run in SQL Server Management Studio for report generation. Data has been anonymized as described above.
 
-## Featured query — Union County grant risk flagging
+## Featured query — County grant risk flagging
 
-Identifies awarded grants in Union County that remain unprogrammed and unobligated, surfacing at-risk projects before federal spending deadlines. CASE statements convert binary flags into human-readable status fields for distribution to non-technical stakeholders.
+Identifies awarded grants in a chosen County that remain unprogrammed and unobligated, surfacing at-risk projects before federal spending deadlines. CASE statements convert binary flags into human-readable status fields for distribution to non-technical stakeholders.
 
 ```
 SELECT 
@@ -66,7 +66,7 @@ SELECT
       ,[Municipality]
       ,[Recipient]
 FROM dbo.[Grants Tracker]
-WHERE County_ies = 'Union'
+WHERE County_ies = 'XYZ'
 AND [Programmed] != 1
 AND [Obligated] != 1
 ORDER BY [Awarded_FY] ASC
@@ -75,7 +75,7 @@ Additional queries supported FY 2022-2023 cycle reporting and subrecipient compl
 
 ## Outputs
 
-During active grant monitoring at NJTPA, the manual process supported the following reporting use cases across a 13-county region:
+During active grant monitoring at a state DOT-style grants tracking system, the manual process supported the following reporting use cases across its subregions:
 
 1. Identification of at-risk grants approaching federal obligation deadlines
 2. Subrecipient compliance tracking for locally sponsored projects
