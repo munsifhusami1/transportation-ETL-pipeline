@@ -19,5 +19,5 @@ SELECT
       ,[Local_Contact]
 
 FROM dbo.[Grants Tracker]
-WHERE [Recipient] NOT IN ('NJDOT','NJ TRANSIT','NJDEP')
+WHERE [Recipient] NOT IN ('Agency_A','Agency_B','Agency_C')
 ORDER BY [Awarded_FY] ASC
