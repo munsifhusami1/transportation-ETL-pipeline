@@ -1,24 +1,16 @@
 SELECT 
        [Awarded_FY]
       ,[Agency]
-      ,[Funding_Source]
+      ,[Grant_Classification]
+      ,[Program]
       ,[Project_Title]
-      ,[Description_Summary]
-      ,[TIP_DBNUM]
       ,[Grant_Type]
       ,[Amount]
       ,CASE
-      WHEN Programmed = 1 THEN 'Yes'
-      WHEN Programmed = 0 THEN 'No'
-      END AS [Programmed]
-      ,CASE
-      WHEN Obligated = 1 THEN 'Yes'
-      WHEN Obligated = 0 THEN 'No'
-      END AS [Obligated],
-      [Municipality]
-      ,[Recipient]
+      WHEN [Obligated?_(Y/N)] = 'Y' THEN 'Yes'
+      ELSE 'No'
+      END AS [Obligated]
 FROM dbo.[Grants Tracker]
 WHERE County_ies = 'XYZ'
-AND [Programmed] != 1
-AND [Obligated] != 1
+AND [Obligated?_(Y/N)] = 'N'
 ORDER BY [Awarded_FY] ASC
