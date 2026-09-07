@@ -11,11 +11,15 @@ import pandas as pd
 import sqlite3
 import string
 
+"""Extract fetches grant application data from source CSV"""
+
 def extract(filepath):
     df = pd.read_csv(filepath, encoding='latin-1')
     return df
 
 Grants_1 = extract("grants_samplesource.csv")
+
+"""Transform cleans column names, handles null values, parses grant dollar amounts/dates, and standardizes formats"""
 
 def transform(df):
     df[' Amount '] = df[' Amount '].str.replace('$', '', regex=False).str.replace(',', '', regex=False).str.strip()
@@ -45,9 +49,13 @@ Grants_1 = transform(Grants_1)
 print(Grants_1[' Amount '].head(5))
 print(Grants_1['Project Title'].head(5))
 
+"""Load adds cleaned DataFrame into the target database grants.db"""
+
 def load(df):
     conn = sqlite3.connect('grants.db')
     df.to_sql('grants', conn, if_exists='replace')
+
+"""Main combines ETL functions to run full pipeline"""
 
 def main():
     df = extract("grants_samplesource.csv")
