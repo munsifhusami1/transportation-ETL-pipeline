@@ -43,7 +43,7 @@ with pdfplumber.open(PDF) as pdf:
                pass 
              for row in table:
                if row[position_accounts] in accounts and row[position_state] == "NJ":
-                    row_dict = {"project title": row[position_project], "program" : row[position_accounts], "award_amount": decimal.Decimal(row[position_amount].strip().replace('$', '').replace(',', '')), "recipient_name" : row[position_recipient] if position_recipient is not None else None, "agency_name": agency_lookup.get(row[position_accounts]), "award_year" : award_year, "grant_class" : grant_class}
+                    row_dict = {"project title": row[position_project].replace('-\n', '').replace('\n', ' '), "program" : row[position_accounts], "award_amount": decimal.Decimal(row[position_amount].strip().replace('$', '').replace(',', '')), "recipient_name" : row[position_recipient] if position_recipient is not None else None, "agency_name": agency_lookup.get(row[position_accounts]), "award_year" : award_year, "grant_class" : grant_class}
                     print(row_dict)
                     #break (enter only when the check for dict against records is needed)
                else:
