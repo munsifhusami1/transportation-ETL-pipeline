@@ -33,7 +33,7 @@ with pdfplumber.open(PDF) as pdf:
              if table[0][0] == "Account":
                if "Community Project Funding/Congressionally Directed Spending" in page.extract_text():
                     grant_class = "Community Project Funding/Congressionally Directed Spending"
-                    print(grant_class)
+               #print(grant_class)
                #print(table[0]) (only to check if first table header is a real header row)
                position_accounts = table[0].index("Account")
                position_state = table[0].index("State")
@@ -67,10 +67,11 @@ with pdfplumber.open(PDF) as pdf:
 #.   - award_amount cleaned to Decimal in row_dict -- DONE.
 # 3b. project_title line-break cleanup -- DONE
 # 3c. Clean recipient_name the same way (-\n then \n). Four of seven rows
-#     are None, so decide how to skip the replace when the value is None.
+#     are None, so decide how to skip the replace when the value is None. - DONE
 # 3d. program: map the full name to an acronym (TPRD) via a lookup dict,
-#     per the project log's normalization list. 
-# 4. NEXT: connect to Postgres (psycopg2/SQLAlchemy) and actually INSERT
+#     per the project log's normalization list. - DONE
+# 4a. Step 4: first insert goes to which table, and why
+# 4b. NEXT: connect to Postgres (psycopg2/SQLAlchemy) and actually INSERT 
 #    row_dict values into the 4-table schema -- not started yet. Need to
 #    figure out: agencies/recipients/projects lookups first (get-or-create
 #    pattern?) before funding insert, same shape as last night's SQL
