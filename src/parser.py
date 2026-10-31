@@ -12,6 +12,10 @@ agency_lookup ={"Highway Infrastructure Programs":"FHWA",
                 "Transit Infrastructure Grants":"FTA",
                 "Transportation Planning, Re-\nsearch, and Development":"FTA"}
 
+program_lookup ={"Highway Infrastructure Programs":"HIP",
+                "Transit Infrastructure Grants":"TIG",
+                "Transportation Planning, Re-\nsearch, and Development":"TPRD"}
+
 award_year = 2022
 
 #for replacing the print(row) with a dict of named fields, positional
@@ -43,7 +47,7 @@ with pdfplumber.open(PDF) as pdf:
                pass 
              for row in table:
                if row[position_accounts] in accounts and row[position_state] == "NJ":
-                    row_dict = {"project title": row[position_project], "program" : row[position_accounts], "award_amount": decimal.Decimal(row[position_amount].strip().replace('$', '').replace(',', '')), "recipient_name" : row[position_recipient] if position_recipient is not None else None, "agency_name": agency_lookup.get(row[position_accounts]), "award_year" : award_year, "grant_class" : grant_class}
+                    row_dict = {"project title": row[position_project].replace('-\n', '').replace('\n', ' '), "program" : program_lookup.get(row[position_accounts]), "award_amount": decimal.Decimal(row[position_amount].strip().replace('$', '').replace(',', '')), "recipient_name" : row[position_recipient].replace('-\n', '').replace('\n', ' ') if position_recipient is not None else None, "agency_name": agency_lookup.get(row[position_accounts]), "award_year" : award_year, "grant_class" : grant_class}
                     print(row_dict)
                     #break (enter only when the check for dict against records is needed)
                else:
@@ -61,10 +65,11 @@ with pdfplumber.open(PDF) as pdf:
 #    - grant_class: sourced from bracketed section text via page.extract_text(),
 #      persists across pages same as position_accounts/position_state
 #.   - award_amount cleaned to Decimal in row_dict -- DONE.
-# 3b. Clean project_title before the projects insert: the PDF puts a hidden \n
-#    (line break) inside titles, so they won't match the clean titles in the
-#    projects table. Decide what \n should become (nothing vs. a space) and
-#    test on a scratch string first. Check hyphenated breaks like "Re-\nplacement"   
+# 3b. project_title line-break cleanup -- DONE
+# 3c. Clean recipient_name the same way (-\n then \n). Four of seven rows
+#     are None, so decide how to skip the replace when the value is None.
+# 3d. program: map the full name to an acronym (TPRD) via a lookup dict,
+#     per the project log's normalization list. 
 # 4. NEXT: connect to Postgres (psycopg2/SQLAlchemy) and actually INSERT
 #    row_dict values into the 4-table schema -- not started yet. Need to
 #    figure out: agencies/recipients/projects lookups first (get-or-create
